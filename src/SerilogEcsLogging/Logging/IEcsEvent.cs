@@ -6,7 +6,7 @@ public interface IEcsEvent
 
     string EventKind { get; }
     
-    string[]? Tags { get; }
+    IList<string>? Tags { get; }
 
     bool? EventOutcome { get; set; }
 

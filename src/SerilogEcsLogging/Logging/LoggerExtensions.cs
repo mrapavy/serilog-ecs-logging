@@ -40,7 +40,7 @@ public static class LoggerExtensions
             outcome = Elastic.CommonSchema.EventOutcome.Failure;
         }
         
-        using (logger.BeginScope($"{{{LogFilename}}} {{{LogLineNumber}}} {{{LogMethodName}}} {{{EventActionSeverity}}} {{{EventActionName}}} {{{EventActionKind}}} {{{EventDuration}}} {{{EventOutcome}}} {{{EventStart}}} {{@{EventData}}} {{@{Tags}}}", sourceFilePath, sourceLineNumber, memberName, LogLevel.None - logLevel, ecsEvent.EventAction, ecsEvent.EventKind, ecsEvent.EventDuration, outcome, eventStart, ecsEvent.EventData, ecsEvent.Tags?.ToList()))
+        using (logger.BeginScope($"{{{LogFilename}}} {{{LogLineNumber}}} {{{LogMethodName}}} {{{EventActionSeverity}}} {{{EventActionName}}} {{{EventActionKind}}} {{{EventDuration}}} {{{EventOutcome}}} {{{EventStart}}} {{@{EventData}}} {{@{Tags}}}", sourceFilePath, sourceLineNumber, memberName, LogLevel.None - logLevel, ecsEvent.EventAction, ecsEvent.EventKind, ecsEvent.EventDuration, outcome, eventStart, ecsEvent.EventData, ecsEvent.Tags))
         {
             logger.Log(logLevel, exception, ecsEvent.EventMessage);
         }
