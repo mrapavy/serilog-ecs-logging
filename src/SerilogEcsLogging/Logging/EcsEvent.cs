@@ -6,7 +6,7 @@ public class EcsEvent : IEcsEvent
     
     public string EventKind { get; }
     
-    public IList<string>? Tags { get; }
+    public IList<string> Tags { get; }
 
     public bool? EventOutcome { get; set; }
     
@@ -24,7 +24,7 @@ public class EcsEvent : IEcsEvent
     {
         EventAction = eventAction;
         EventKind = eventKind;
-        Tags = tags;
+        Tags = tags ?? new List<string>();
         EventOutcome = eventOutcome;
         EventDuration = eventDuration;
         EventMessage = message;

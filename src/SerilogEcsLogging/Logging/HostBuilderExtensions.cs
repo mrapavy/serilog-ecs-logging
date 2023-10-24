@@ -8,6 +8,8 @@ namespace SerilogEcsLogging.Logging;
 
 public static class HostBuilderExtensions
 {
+    public const string TraceTemplate = "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz}][{MachineName}][{Level:u3}][{SourceContext}][{ThreadId}]{Scope} {Message}{NewLine}{Exception}"; 
+    
     public static IHostBuilder UseSerilogEvents(this IHostBuilder builder, Action<HostBuilderContext, LoggerConfiguration>? configureLogger = null, bool logEcsEvents = true, bool logToConsole = true)
     {
         return builder.UseSerilog((context, configuration) => {
@@ -28,12 +30,11 @@ public static class HostBuilderExtensions
                 configuration.WriteTo.Async(c => {
                     if (logEcsEvents)
                     {
-                        c.Console(new EcsTextFormatter(new EcsTextFormatterConfiguration().MapCustom(EcsMapper.MapLogEvent).MapExceptions(true).MapCurrentThread(true)
-                            .MapHttpContext(context.Configuration.Get<HttpContextAccessor>())));
+                        c.Console(new EcsTextFormatter(new EcsTextFormatterConfiguration().MapCustom(EcsMapper.MapLogEvent).MapExceptions(true).MapCurrentThread(true).MapHttpContext(context.Configuration.Get<HttpContextAccessor>())));
                     }
                     else
                     {
-                        c.Console(outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz}][{Level:u3}][{SourceContext}][{ThreadId}]{Scope} {Message}{NewLine}{Exception}");
+                        c.Console(outputTemplate: TraceTemplate);
                     }
                 });
             }
