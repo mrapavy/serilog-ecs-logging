@@ -12,7 +12,7 @@ public static class HostBuilderExtensions
 
     public static EcsTextFormatter CreateEcsTextFormatter(HostBuilderContext context) => new EcsTextFormatter(new EcsTextFormatterConfiguration().MapCustom(EcsMapper.MapLogEvent).MapExceptions(true).MapCurrentThread(true).MapHttpContext(context.Configuration.Get<HttpContextAccessor>()));
     
-    public static IHostBuilder UseSerilogEvents(this IHostBuilder builder, Action<HostBuilderContext, LoggerConfiguration>? configureLogger = null, bool logEcsEvents = true, bool logToConsole = true)
+    public static IHostBuilder UseSerilogEvents(this IHostBuilder builder, Action<HostBuilderContext, LoggerConfiguration>? configureLogger = null, bool logEcsEvents = true, bool logToConsole = true, string? logFilePath = null)
     {
         return builder.UseSerilog((context, configuration) => {
             configuration
@@ -39,6 +39,23 @@ public static class HostBuilderExtensions
                         c.Console(outputTemplate: TraceTemplate);
                     }
                 });
+            }
+
+            if (logFilePath != null)
+            {
+                if (logEcsEvents)
+                {
+                    var directory = Path.GetDirectoryName(logFilePath) ?? string.Empty;
+                    var filename = Path.GetFileNameWithoutExtension(logFilePath);
+                    var extension = Path.GetExtension(logFilePath);
+                    logFilePath = Path.Combine(directory, $"{filename}.ECS.{extension}");
+                    
+                    configuration.WriteTo.Async(c => c.File(CreateEcsTextFormatter(context), logFilePath, rollingInterval: RollingInterval.Day));
+                }
+                else
+                {
+                    configuration.WriteTo.Async(c => c.File(logFilePath, rollingInterval: RollingInterval.Day, outputTemplate: TraceTemplate));
+                }
             }
 
             configuration.ReadFrom.Configuration(context.Configuration);

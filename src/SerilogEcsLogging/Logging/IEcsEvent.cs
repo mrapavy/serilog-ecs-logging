@@ -4,6 +4,8 @@ public interface IEcsEvent
 {
     string EventAction { get; }
 
+    string EventId { get; }
+
     string EventKind { get; }
     
     IList<string>? Tags { get; }

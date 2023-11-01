@@ -3,7 +3,9 @@
 public class EcsEvent : IEcsEvent
 {
     public string EventAction { get; }
-    
+
+    public string EventId { get; }
+
     public string EventKind { get; }
     
     public IList<string> Tags { get; }
@@ -20,9 +22,10 @@ public class EcsEvent : IEcsEvent
     
     public string? TraceId { get; set; }
 
-    public EcsEvent(string eventAction, string eventKind = Elastic.CommonSchema.EventKind.Event, IList<string>? tags = null, bool? eventOutcome = null, TimeSpan? eventDuration = null, string? message = null, object? eventData = null, string? transactionId = null, string? traceId = null)
+    public EcsEvent(string eventAction, string eventKind = Elastic.CommonSchema.EventKind.Event, IList<string>? tags = null, bool? eventOutcome = null, TimeSpan? eventDuration = null, string? message = null, object? eventData = null, string? transactionId = null, string? traceId = null, string? eventId = null)
     {
         EventAction = eventAction;
+        EventId = eventId ?? Guid.NewGuid().ToString();
         EventKind = eventKind;
         Tags = tags ?? new List<string>();
         EventOutcome = eventOutcome;

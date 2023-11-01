@@ -14,6 +14,7 @@ public static class LoggerExtensions
     public const string LogMethodName = "LogOriginMethodName";
     public const string EventActionSeverity = "ActionSeverity";
     public const string EventActionName = "ActionName";
+    public const string EventActionId = "ActionId";
     public const string EventActionKind = "ActionKind";
     public const string EventDuration = "ElapsedMilliseconds";
     public const string EventOutcome = "ActionOutcome";
@@ -40,7 +41,7 @@ public static class LoggerExtensions
             outcome = Elastic.CommonSchema.EventOutcome.Failure;
         }
         
-        using (logger.BeginScope($"{{{LogFilename}}} {{{LogLineNumber}}} {{{LogMethodName}}} {{{EventActionSeverity}}} {{{EventActionName}}} {{{EventActionKind}}} {{{EventDuration}}} {{{EventOutcome}}} {{{EventStart}}} {{@{EventData}}} {{@{Tags}}}", sourceFilePath, sourceLineNumber, memberName, LogLevel.None - logLevel, ecsEvent.EventAction, ecsEvent.EventKind, ecsEvent.EventDuration, outcome, eventStart, ecsEvent.EventData, ecsEvent.Tags))
+        using (logger.BeginScope($"{{{LogFilename}}} {{{LogLineNumber}}} {{{LogMethodName}}} {{{EventActionSeverity}}} {{{EventActionName}}} {{{EventActionId}}} {{{EventActionKind}}} {{{EventDuration}}} {{{EventOutcome}}} {{{EventStart}}} {{@{EventData}}} {{@{Tags}}}", sourceFilePath, sourceLineNumber, memberName, LogLevel.None - logLevel, ecsEvent.EventAction, ecsEvent.EventId, ecsEvent.EventKind, ecsEvent.EventDuration, outcome, eventStart, ecsEvent.EventData, ecsEvent.Tags))
         {
             logger.Log(logLevel, exception, ecsEvent.EventMessage);
         }
