@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Serilog;
+using Serilog.Events;
 
 namespace SerilogEcsLogging.Logging;
 
@@ -12,7 +13,7 @@ public static class HostBuilderExtensions
 
     public static EcsTextFormatter CreateEcsTextFormatter(HostBuilderContext context) => new EcsTextFormatter(new EcsTextFormatterConfiguration().MapCustom(EcsMapper.MapLogEvent).MapExceptions(true).MapCurrentThread(true).MapHttpContext(context.Configuration.Get<HttpContextAccessor>()));
     
-    public static IHostBuilder UseSerilogEvents(this IHostBuilder builder, Action<HostBuilderContext, LoggerConfiguration>? configureLogger = null, bool logEcsEvents = true, bool logToConsole = true, string? logFilePath = null)
+    public static IHostBuilder UseSerilogEvents(this IHostBuilder builder, Action<HostBuilderContext, LoggerConfiguration>? configureLogger = null, bool logEcsEvents = true, bool logToConsole = true, bool consoleToStdErr = false, string? logFilePath = null)
     {
         return builder.UseSerilog((context, configuration) => {
             configuration
@@ -29,14 +30,15 @@ public static class HostBuilderExtensions
 
             if (logToConsole)
             {
+                LogEventLevel? stdErrFromLevel = consoleToStdErr ? LogEventLevel.Verbose : null;
                 configuration.WriteTo.Async(c => {
                     if (logEcsEvents)
                     {
-                        c.Console(CreateEcsTextFormatter(context));
+                        c.Console(CreateEcsTextFormatter(context), standardErrorFromLevel: stdErrFromLevel);
                     }
                     else
                     {
-                        c.Console(outputTemplate: TraceTemplate);
+                        c.Console(outputTemplate: TraceTemplate, standardErrorFromLevel: stdErrFromLevel);
                     }
                 });
             }
