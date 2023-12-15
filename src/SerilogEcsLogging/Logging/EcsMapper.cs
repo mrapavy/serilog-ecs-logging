@@ -44,7 +44,6 @@ public static class EcsMapper
         {
             result.Service ??= new Service();
             result.Service.Name = assemblyName.ToString().Trim('"');
-            result.Tags = result.Tags != null ? result.Tags.Concat(new[] { result.Service.Name }).ToArray() : new[] { result.Service.Name };
         }
         
         // Service.Version

@@ -1,9 +1,5 @@
-﻿using Elastic.CommonSchema.Serilog;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.Hosting;
 using Serilog;
-using Serilog.Events;
 
 namespace SerilogEcsLogging.Logging;
 
