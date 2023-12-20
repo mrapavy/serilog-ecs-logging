@@ -8,7 +8,7 @@ public interface IEcsEvent
 
     string EventKind { get; }
     
-    IList<string>? Tags { get; }
+    ISet<string>? Tags { get; }
 
     bool? EventOutcome { get; set; }
 
@@ -17,8 +17,18 @@ public interface IEcsEvent
     string? EventMessage { get; set; }
     
     object? EventData { get; set; }
-    
+
+    string? EventModule { get; set; }
+
+    string? ErrorCode { get; set; }
+
+    string? ErrorMessage { get; set; }
+
+    string? ErrorException { get; set; }
+
     string? TransactionId { get; set; }
 
     string? TraceId { get; set; }
+    
+    public bool? ServiceState { get; set; }
 }

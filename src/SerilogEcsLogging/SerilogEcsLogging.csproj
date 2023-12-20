@@ -7,11 +7,11 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <Authors>mrapavy</Authors>
         <PackageProjectUrl>https://github.com/mrapavy/serilog-ecs-logging</PackageProjectUrl>
-        <Version>1.0.8</Version>
+        <Version>1.1.0</Version>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Elastic.CommonSchema.Serilog" Version="1.5.3" />
+      <PackageReference Include="Elastic.CommonSchema.Serilog" Version="8.6.1" />
       <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
       <PackageReference Include="Serilog.Enrichers.AssemblyName" Version="1.0.9" />
       <PackageReference Include="Serilog.Enrichers.CorrelationId" Version="3.0.1" />

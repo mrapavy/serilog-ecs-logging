@@ -1,7 +1,4 @@
 ﻿using Elastic.CommonSchema.Serilog;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 using Serilog;
 using Serilog.Events;
 
@@ -11,17 +8,15 @@ public static class LoggerConfigurationExtensions
 {
     public const string TraceTemplate = "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz}][{MachineName}][{Level:u3}][{SourceContext}][{ThreadId}]{Scope} {Message}{NewLine}{Exception}";
 
-    public static EcsTextFormatter CreateEcsTextFormatter(HostBuilderContext? context = null)
-    {
-        var configuration = new EcsTextFormatterConfiguration().MapCustom(EcsMapper.MapLogEvent).MapExceptions(true).MapCurrentThread(true);
-        if (context != null)
-        {
-            configuration.MapHttpContext(context.Configuration.Get<HttpContextAccessor>());
-        }
-        return new EcsTextFormatter(configuration);
-    }
+    public static EcsTextFormatter CreateEcsTextFormatter() => new EcsTextFormatter(new EcsTextFormatterConfiguration { 
+        IncludeHost = true, 
+        IncludeProcess = true, 
+        IncludeUser = true, 
+        MapCustom = EcsMapper.MapLogEvent, 
+        LogEventPropertiesToFilter = new HashSet<string> {"metadata.*"} 
+    });
     
-    public static LoggerConfiguration ConfigureEcs(this LoggerConfiguration configuration, bool logEcsEvents = true, bool logToConsole = true, bool consoleToStdErr = false, string? logFilePath = null, HostBuilderContext? context = null)
+    public static LoggerConfiguration ConfigureEcs(this LoggerConfiguration configuration, bool logEcsEvents = true, bool logToConsole = true, bool consoleToStdErr = false, string? logFilePath = null)
     {
         configuration
             .Enrich.FromLogContext()
@@ -41,7 +36,7 @@ public static class LoggerConfigurationExtensions
             configuration.WriteTo.Async(c => {
                 if (logEcsEvents)
                 {
-                    c.Console(CreateEcsTextFormatter(context), standardErrorFromLevel: stdErrFromLevel);
+                    c.Console(CreateEcsTextFormatter(), standardErrorFromLevel: stdErrFromLevel);
                 }
                 else
                 {
@@ -59,7 +54,7 @@ public static class LoggerConfigurationExtensions
                 var extension = Path.GetExtension(logFilePath);
                 logFilePath = Path.Combine(directory, $"{filename}.ECS.{extension}");
                     
-                configuration.WriteTo.Async(c => c.File(CreateEcsTextFormatter(context), logFilePath, rollingInterval: RollingInterval.Day));
+                configuration.WriteTo.Async(c => c.File(CreateEcsTextFormatter(), logFilePath, rollingInterval: RollingInterval.Day));
             }
             else
             {

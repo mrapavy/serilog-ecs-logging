@@ -1,16 +1,16 @@
 ﻿namespace SerilogEcsLogging.Logging;
 
-public class Base : Elastic.CommonSchema.Base
+public class EcsDocument : Elastic.CommonSchema.EcsDocument
 {
     public const string DataFieldName = "Data";
 
     public object? Data { get; set; }
 
-    public Base()
+    public EcsDocument()
     {
     }
 
-    public Base(Elastic.CommonSchema.Base o, object data)
+    public EcsDocument(Elastic.CommonSchema.EcsDocument o, object? data)
     {
         Metadata = o.Metadata;
         Agent = o.Agent;
@@ -19,12 +19,17 @@ public class Base : Elastic.CommonSchema.Base
         Cloud = o.Cloud;
         CodeSignature = o.CodeSignature;
         Container = o.Container;
+        DataStream = o.DataStream;
         Destination = o.Destination;
+        Device = o.Device;
         Dll = o.Dll;
         Dns = o.Dns;
         Ecs = o.Ecs;
+        Elf = o.Elf;
+        Email = o.Email;
         Error = o.Error;
         Event = o.Event;
+        Faas = o.Faas;
         File = o.File;
         Geo = o.Geo;
         Group = o.Group;
@@ -35,6 +40,7 @@ public class Base : Elastic.CommonSchema.Base
         Log = o.Log;
         Network = o.Network;
         Observer = o.Observer;
+        Orchestrator = o.Orchestrator;
         Organization = o.Organization;
         Os = o.Os;
         Package = o.Package;
@@ -42,6 +48,7 @@ public class Base : Elastic.CommonSchema.Base
         Process = o.Process;
         Registry = o.Registry;
         Related = o.Related;
+        Risk = o.Risk;
         Rule = o.Rule;
         Server = o.Server;
         Service = o.Service;
@@ -54,38 +61,47 @@ public class Base : Elastic.CommonSchema.Base
         Vlan = o.Vlan;
         Vulnerability = o.Vulnerability;
         Timestamp = o.Timestamp;
-        Tags = o.Tags;
-        Labels = o.Labels;
         Message = o.Message;
-        Trace = o.Trace;
-        Transaction = o.Transaction;
+        Tags = o.Tags;
+        SpanId = o.SpanId;
+        TraceId = o.TraceId;
+        TransactionId = o.TransactionId;
+        Labels = o.Labels;
+        
         Data = data;
     }
 
-    protected override bool TryRead(string propertyName, out Type type)
+    protected override bool TryRead(string propertyName, out Type? type)
     {
-        if (propertyName == DataFieldName)
+        switch (propertyName)
         {
-            type = typeof(object);
-            return true;
+            case DataFieldName:
+                type = typeof(object);
+                return true;
         }
-
+        
         return base.TryRead(propertyName, out type);
     }
 
     protected override bool ReceiveProperty(string propertyName, object value)
     {
-        if (propertyName == DataFieldName)
+        switch (propertyName)
         {
-            Data = value;
-            return true;
+            case DataFieldName:
+                Data = value;
+                return true;
         }
         
         return base.ReceiveProperty(propertyName, value);
     }
 
-    protected override void WriteAdditionalProperties(Action<string, object?> write)
+    protected override void WriteAdditionalProperties(Action<string, object> write)
     {
-        write(DataFieldName, Data);
+        if (Data != null)
+        {
+            write(DataFieldName, Data);
+        }
+        
+        base.WriteAdditionalProperties(write);
     }
 }
