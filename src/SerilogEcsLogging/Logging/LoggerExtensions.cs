@@ -35,8 +35,8 @@ public static class LoggerExtensions
                                                 {{{LogTemplateProperties.EventDuration}}} {{{LogTemplateProperties.EventOutcome}}} {{{LogTemplateProperties.EventStart}}} {{{LogTemplateProperties.EventModule}}}
                                                 {{{LogTemplateProperties.ErrorCode}}} {{{LogTemplateProperties.ErrorMessage}}} {{{LogTemplateProperties.ErrorStackTrace}}} {{{LogTemplateProperties.TransactionId}}}
                                                 {{{LogTemplateProperties.TraceId}}} {{{LogTemplateProperties.ServiceState}}} {{@{EventData}}} {{@{Tags}}}",
-                   sourceFilePath, sourceLineNumber, memberName, LogLevel.None - logLevel, ecsEvent.EventAction, ecsEvent.EventId, ecsEvent.EventKind, ecsEvent.EventDuration, outcome, eventStart, ecsEvent.EventModule,
-                             ecsEvent.ErrorCode, ecsEvent.ErrorMessage, ecsEvent.ErrorException, ecsEvent.TransactionId, ecsEvent.TraceId, ecsEvent.ServiceState, ecsEvent.EventData, ecsEvent.Tags))
+                   sourceFilePath, sourceLineNumber, memberName, LogLevel.None - logLevel, ecsEvent.EventAction, ecsEvent.EventId, ecsEvent.EventKind, (long?)(ecsEvent.EventDuration?.TotalMilliseconds * 1000000) /*nanoseconds*/, outcome,
+                             eventStart, ecsEvent.EventModule, ecsEvent.ErrorCode, ecsEvent.ErrorMessage, ecsEvent.ErrorException, ecsEvent.TransactionId, ecsEvent.TraceId, ecsEvent.ServiceState, ecsEvent.EventData, ecsEvent.Tags))
         {
             logger.Log(logLevel, exception, ecsEvent.EventMessage);
         }

@@ -13,7 +13,7 @@ public static class LoggerConfigurationExtensions
         IncludeProcess = true, 
         IncludeUser = true, 
         MapCustom = EcsMapper.MapLogEvent, 
-        LogEventPropertiesToFilter = new HashSet<string> {"metadata.*"} 
+        LogEventPropertiesToFilter = new HashSet<string> {"metadata.*", "labels.*"} 
     });
     
     public static LoggerConfiguration ConfigureEcs(this LoggerConfiguration configuration, bool logEcsEvents = true, bool logToConsole = true, bool consoleToStdErr = false, string? logFilePath = null)

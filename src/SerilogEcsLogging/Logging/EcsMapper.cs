@@ -26,6 +26,9 @@ public static class EcsMapper
             result.Tags = result.Tags.Distinct().ToArray();
             Array.Sort(result.Tags);
         }
+
+        result.Metadata = null;
+        result.Labels = null;
         
         return result;
     }
