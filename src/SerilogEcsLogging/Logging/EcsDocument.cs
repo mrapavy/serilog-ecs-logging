@@ -1,4 +1,6 @@
-﻿namespace SerilogEcsLogging.Logging;
+﻿using Elastic.CommonSchema;
+
+namespace SerilogEcsLogging.Logging;
 
 public class EcsDocument : Elastic.CommonSchema.EcsDocument
 {
@@ -8,6 +10,36 @@ public class EcsDocument : Elastic.CommonSchema.EcsDocument
 
     public EcsDocument()
     {
+    }
+
+    public EcsDocument(IEcsEvent ev)
+    {
+        Event = new Event {
+            Action = ev.EventAction,
+            Id = ev.EventId,
+            Kind = ev.EventKind,
+            Outcome = ev.EventOutcome.HasValue ? (ev.EventOutcome.Value ? "success" : "failure") : null,
+            Duration = (long?)(ev.EventDuration?.TotalMilliseconds * 1000000), // nanoseconds
+            Module = ev.EventModule
+        };
+
+        if (ev.ErrorCode != null || ev.ErrorMessage != null || ev.ErrorException != null)
+        {
+            Error = new Error {
+                Code = ev.ErrorCode,
+                Message = ev.ErrorMessage,
+                StackTrace = ev.ErrorException
+            };   
+        }
+
+        if (ev.ServiceState != null)
+        {
+            Service = new Service { State = ev.ServiceState.ToString() };
+        }
+
+        TransactionId = ev.TransactionId;
+        TraceId = ev.TraceId;
+        Tags = ev.Tags?.OrderBy(t => t).ToArray();
     }
 
     public EcsDocument(Elastic.CommonSchema.EcsDocument o, object? data)

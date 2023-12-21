@@ -30,5 +30,7 @@ public interface IEcsEvent
 
     string? TraceId { get; set; }
     
-    public bool? ServiceState { get; set; }
+    bool? ServiceState { get; set; }
+
+    Elastic.CommonSchema.EcsDocument ToEcsDocument();
 }
