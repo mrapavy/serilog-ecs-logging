@@ -1,4 +1,5 @@
-﻿using Elastic.CommonSchema;
+﻿using System.Reflection;
+using Elastic.CommonSchema;
 
 namespace SerilogEcsLogging.Logging;
 
@@ -32,10 +33,15 @@ public class EcsDocument : Elastic.CommonSchema.EcsDocument
             };   
         }
 
-        if (ev.ServiceState != null)
-        {
-            Service = new Service { State = ev.ServiceState.ToString() };
-        }
+        Service = new Service {
+            State = ev.ServiceState?.ToString(),
+            Name = Assembly.GetExecutingAssembly().GetName().Name,
+            Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString(),
+            Type = ev.EventModule,
+            Address = System.Net.Dns.GetHostName()
+        };
+
+        Host = new Host { Hostname = Service.Address };
 
         TransactionId = ev.TransactionId;
         TraceId = ev.TraceId;
