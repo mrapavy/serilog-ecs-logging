@@ -40,6 +40,7 @@ public class EcsDocument : Elastic.CommonSchema.EcsDocument
         TransactionId = ev.TransactionId;
         TraceId = ev.TraceId;
         Tags = ev.Tags?.OrderBy(t => t).ToArray();
+        Data = ev.EventData;
     }
 
     public EcsDocument(Elastic.CommonSchema.EcsDocument o, object? data)

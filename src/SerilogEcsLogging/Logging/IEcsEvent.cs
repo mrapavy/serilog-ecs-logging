@@ -32,5 +32,5 @@ public interface IEcsEvent
     
     bool? ServiceState { get; set; }
 
-    Elastic.CommonSchema.EcsDocument ToEcsDocument();
+    EcsDocument ToEcsDocument();
 }

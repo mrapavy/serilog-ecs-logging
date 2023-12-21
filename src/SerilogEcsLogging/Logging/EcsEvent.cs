@@ -32,7 +32,7 @@ public class EcsEvent : IEcsEvent
 
     public bool? ServiceState { get; set; }
 
-    public Elastic.CommonSchema.EcsDocument ToEcsDocument() => new EcsDocument(this);
+    public EcsDocument ToEcsDocument() => new EcsDocument(this);
 
     public EcsEvent(string eventAction, string eventKind = Logging.EventKind.Event, ISet<string>? tags = null, bool? eventOutcome = null, TimeSpan? eventDuration = null, string? message = null, object? eventData = null, string? transactionId = null, string? traceId = null, string? eventId = null, string? eventModule = null, string? errorCode = null, string? errorMessage = null, string? errorException = null, bool? serviceState = null)
     {
