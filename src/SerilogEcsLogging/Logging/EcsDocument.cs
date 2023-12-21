@@ -35,8 +35,8 @@ public class EcsDocument : Elastic.CommonSchema.EcsDocument
 
         Service = new Service {
             State = ev.ServiceState?.ToString(),
-            Name = Assembly.GetExecutingAssembly().GetName().Name,
-            Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString(),
+            Name = Assembly.GetCallingAssembly().GetName().Name,
+            Version = Assembly.GetCallingAssembly().GetName().Version?.ToString(),
             Type = ev.EventModule,
             Address = System.Net.Dns.GetHostName()
         };
