@@ -20,6 +20,13 @@ public static class EcsMapper
             string[] tagsStrings = Array.ConvertAll(tags, o => o.ToString()).Where(t => t != null).ToArray()!;
             result.Tags = result.Tags != null ? result.Tags.Concat(tagsStrings).ToArray() : tagsStrings;
         }
+        
+        // Add AssemblyName to Tags
+        if (logEvent.Properties.TryGetValue("AssemblyName", out var assemblyName) && assemblyName is ScalarValue) 
+        { 
+            var serviceName = assemblyName.ToString().Trim('"'); 
+            result.Tags = result.Tags != null ? result.Tags.Concat(new[] { serviceName }).ToArray() : new[] { serviceName }; 
+        }
 
         if (result.Tags != null)
         {
