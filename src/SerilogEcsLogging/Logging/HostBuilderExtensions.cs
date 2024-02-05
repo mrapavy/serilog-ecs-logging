@@ -10,10 +10,10 @@ public static class HostBuilderExtensions
     
     public static bool RunningInContainer => string.Equals(Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER"), "true", StringComparison.InvariantCultureIgnoreCase);
     
-    public static IHostBuilder UseSerilogEvents(this IHostBuilder builder, Action<HostBuilderContext, LoggerConfiguration>? configureLogger = null, bool logEcsEvents = true, bool logToConsole = true, bool consoleToStdErr = false, string? logFilePath = null, string? httpEndpoint = null, TimeSpan? httpPostPeriod = null, int? logEventsInHttpBatchLimit = 1000)
+    public static IHostBuilder UseSerilogEvents(this IHostBuilder builder, Action<HostBuilderContext, LoggerConfiguration>? configureLogger = null, bool logEcsEvents = true, bool logToConsole = true, bool consoleToStdErr = false, string? logFilePath = null)
     {
         return builder.UseSerilog((context, configuration) => {
-            configuration.ConfigureEcs(logEcsEvents, logToConsole, consoleToStdErr, logFilePath, httpEndpoint, httpPostPeriod, logEventsInHttpBatchLimit);
+            configuration.ConfigureEcs(logEcsEvents, logToConsole, consoleToStdErr, logFilePath, context.Configuration["HttpSinkEndpoint"]);
             configuration.ReadFrom.Configuration(context.Configuration);
             configureLogger?.Invoke(context, configuration);
         });
