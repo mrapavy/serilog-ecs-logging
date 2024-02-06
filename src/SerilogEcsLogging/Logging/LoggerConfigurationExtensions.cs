@@ -53,7 +53,7 @@ public static class LoggerConfigurationExtensions
                 var directory = Path.GetDirectoryName(logFilePath) ?? string.Empty;
                 var filename = Path.GetFileNameWithoutExtension(logFilePath);
                 var extension = Path.GetExtension(logFilePath);
-                logFilePath = Path.Combine(directory, $"{filename}.ECS.{extension}");
+                logFilePath = Path.Combine(directory, $"{filename}.ECS{extension}");
                     
                 configuration.WriteTo.Async(c => c.File(EcsTextFormatter, logFilePath, rollingInterval: RollingInterval.Day));
             }
